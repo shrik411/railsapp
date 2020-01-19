@@ -3,7 +3,6 @@
 <%= text_field_tag :search, "", class: "search_widgets form-control", placeholder: "Search" %>
 <%= render partial: 'item_grid', locals: { items: @widgets["widgets"]} %>
 
-
 <script type="text/javascript">
 $(".search_widgets").keyup(function() {
     $.ajax({

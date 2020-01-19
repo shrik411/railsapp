@@ -11,13 +11,31 @@ class UsersController < ApplicationController
     end
 
     def create
-      user = User.find_by_email(params[:email])
-      if user && user.authenticate(params[:password])
-        session[:user_id] = user.id
-        redirect_to root_url, notice: 'Logged in !'
-      else
-        render :new
+      if params[:user].nil?
+        redirect_to home_path
       end
+
+      userDetails =  {
+        "client_id": ENV.fetch('CLIENT_ID'),
+        "client_secret": ENV.fetch('CLIENT_SECRET'),
+        "user": {
+          "first_name": params[:user]["firstname"],
+          "last_name": params[:user]["lastname"],
+          "password": params[:user]["password"],
+          "email": params[:user]["email"],
+          "image_url": params[:user]["image_url"]
+        }
+      }
+
+      response = ApiCall.new("https://showoff-rails-react-production.herokuapp.com", "post", "/api/v1/users", userDetails,  {}).execute()
+      @response = JSON.parse(response.body)
+      @user =  @response["data"]
+
+      if (!@user.nil?)
+        session[:token] = @user["token"]
+      end
+
+      redirect_to home_path
     end
     
     def destroy
@@ -35,32 +53,31 @@ class UsersController < ApplicationController
     def show
       id = params["id"]
 
-      
-      token = {
-          "access_token": "d2697427cfa244e2cbaf8bc848d264ce5bdfb7731929602a4f236c41797c0238",
-          "token_type": "Bearer",
-          "expires_in": 2592000,
-          "refresh_token": "7011e4cbcd788a77cd023f9a2b5fe5f1874c7085c78f1e4e8e7d4fede5f4756b",
-          "scope": "basic",
-          "created_at": 1579248890
-      }
+      # check if id is present and user is logged in
+      if (id and !session[:token].nil?) 
+        token = session[:token]["token"]["access_token"]
+        puts token
+        headers = {
+          'Content-Type' => 'application/json',
+          'Authorization' => "Bearer #{token}" 
+        }
+        @widget = get_widgets(id)
 
-      headers = {
-        'Content-Type' => 'application/json',
-        'Authorization' => 'Bearer 10'
-      }
-
-      response = ApiCall.new("https://showoff-rails-react-production.herokuapp.com", "get", "/api/v1/users/1", "", headers).execute()
-      @response = JSON.parse(response.body)
-    
+        response = ApiCall.new("https://showoff-rails-react-production.herokuapp.com", "get", "/api/v1/users/#{id}", {},  {}, headers).execute()
+        @response = JSON.parse(response.body)
+        @message = @response["message"]
+        @user =  @response["data"]
+      else
+        redirect_to home_path
+      end
       
     end
 
     def details
       #puts JWT_ID
       params = {
-        "client_id": "277ef29692f9a70d511415dc60592daf4cf2c6f6552d3e1b769924b2f2e2e6fe",
-        "client_secret": "d6106f26e8ff5b749a606a1fba557f44eb3dca8f48596847770beb9b643ea352"
+        "client_id": ENV.fetch('CLIENT_ID'),
+        "client_secret": ENV.fetch('CLIENT_SECRET'),
       }
       response = ApiCall.new("https://showoff-rails-react-production.herokuapp.com", "get", "", "/api/v1/widgets/visible", params).execute()
       response = JSON.parse(response.body)
@@ -88,8 +105,6 @@ class UsersController < ApplicationController
         if (!@token.nil?)
           session[:token] = @token
         end
-        
-        puts session[:token]
 
         redirect_to home_path
 
@@ -105,5 +120,15 @@ class UsersController < ApplicationController
     private
     def login_params
       params.permit(:username, :password)
+    end
+
+    def get_widgets(id)
+      params = {
+          "client_id": ENV.fetch('CLIENT_ID'),
+          "client_secret": ENV.fetch('CLIENT_SECRET')
+      }
+      response = ApiCall.new("https://showoff-rails-react-production.herokuapp.com", "get", "/api/v1/users/#{id}/widgets", "", params).execute()
+      response = JSON.parse(response.body)
+      @widgets = response["data"]
     end
 end
