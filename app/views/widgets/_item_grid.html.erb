@@ -1,0 +1,20 @@
+
+<table class="table">
+<thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Name</th>
+    <th scope="col">Description</th>
+    <th scope="col">User</th>
+  </tr>
+</thead>
+<tbody id="items_grid" class="widget_tbody_content">
+  <% if !items.nil? %>
+      <%= render partial: 'items_list', locals: {items: items}  %>
+  <% else %>
+    <tr>
+      <td colspan="4">No Data Found</td>
+    <tr>
+  <% end %>
+</tbody>
+</table>

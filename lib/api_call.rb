@@ -1,7 +1,18 @@
 class ApiCall
     attr_accessor :url
-    def initialize(url)
+    attr_accessor :request_method
+    attr_accessor :path
+    attr_accessor :request_body
+    attr_accessor :get_params
+    attr_accessor :headers
+
+    def initialize(url, request_method, path, request_body, get_params, headers=default_headers)
         @url = url
+        @request_method = request_method
+        @path = path
+        @request_body = request_body
+        @get_params = get_params
+        @headers = headers
     end
 
     def pretty_print_body
@@ -14,12 +25,12 @@ class ApiCall
 
     def execute(options={})
       response = faraday(options).run_request(
-        "get".to_sym,
+        request_method.to_sym,
         path,
-        {}.to_json,
+        request_body.to_json,
         headers
       )
-  
+    
       response_success = response.status >= 200 && response.status <= 299
       response_body = response.body
       response_status = response.status
@@ -34,7 +45,7 @@ class ApiCall
                  {timeout: REQUEST_OPEN_READ_TIMEOUT_IN_SECONDS}
                end
   
-      @faraday ||= Faraday.new(options.merge({ url: host, request: params, ssl: { verify: false } }))
+      @faraday ||= Faraday.new(options.merge({ url: host, params: get_params, request: params, ssl: { verify: false } }))
   
       @faraday
     end
@@ -45,7 +56,7 @@ class ApiCall
   
     protected
   
-    def headers
+    def default_headers
       {
         'Content-Type' => 'application/json',
       }
@@ -55,12 +66,12 @@ class ApiCall
       @host ||= URI.join(url, '/').to_s
     end
   
-    def path
-      @path = uri(url).path
-      query_params = uri(url).query
-      @path += "?#{query_params}" if query_params.present?
-      @path
-    end
+    # def path
+    #   @path = uri(url).path
+    #   query_params = uri(url).query
+    #   @path += "?#{query_params}" if query_params.present?
+    #   @path
+    # end
   
     def query_params
       params = URI(url).query

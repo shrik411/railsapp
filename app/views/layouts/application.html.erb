@@ -6,6 +6,8 @@
     <!-- Latest compiled and minified CSS -->
     <%= stylesheet_link_tag    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' %>  
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
@@ -27,12 +29,22 @@
             <li><a href="#about">Widget</a></li>
             <li><a href="#contact">Users</a></li>
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <% if session[:token] %>
+                <%= link_to 'Logout', logout_path  %>
+              <% else %>
+                <%= link_to 'Login', new_release_path,  {:remote => true, 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
+              <% end %>
+            </li>
+          </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-
+    <%= render 'users/login' %>
     <div class="container">
       <%= yield %>
     </div>
   </body>
+  <div id="modal-window" class="modal" role="dialog" aria-labelledby="myModalLabel"></div>
 </html>

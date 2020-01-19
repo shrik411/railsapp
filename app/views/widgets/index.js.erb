@@ -1,0 +1,7 @@
+$(".search_widgets").keyup(function() {
+    alert("call")
+    $.ajax({
+       url: '/super_admin/companies/search',
+       data: {search: $(this).serialize()}
+    });
+});

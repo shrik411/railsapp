@@ -1,34 +1,14 @@
 <h1>Widgets list</h1>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>
-<%= link_to 'Add release', new_release_path,  {:remote => true, 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
-<%= render 'users/login' %>
-<%= response.body %>
+<!-- Search form -->
+<%= text_field_tag :search, "", class: "search_widgets form-control", placeholder: "Search" %>
+<%= render partial: 'item_grid', locals: { items: @widgets["widgets"]} %>
+
+
+<script type="text/javascript">
+$(".search_widgets").keyup(function() {
+    $.ajax({
+       url: '/widgets/search',
+       data: {search: $(this).serialize()}
+    });
+});
+</script>

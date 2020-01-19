@@ -1,0 +1,14 @@
+<% if !items.nil? %>
+    <% items.each do |item| %>
+        <tr>
+            <th scope="row"><%= item['id'] %></th>
+            <td><%= item['name'] %></td>
+            <td><%= item['description'] %></td>
+            <td><%= link_to(item['user']['name'], user_path(item['user']['id'])) %></td>
+        </tr>
+    <% end %>
+<% else %>
+    <tr>
+        <td>No Data Found!</td>
+    </tr>
+<% end %>
