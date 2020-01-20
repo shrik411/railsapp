@@ -1,0 +1,13 @@
+<h1>Widgets list</h1>
+<!-- Search form -->
+<%= text_field_tag :search, "", class: "search_widgets form-control", placeholder: "Search" %>
+<%= render partial: 'item_grid', locals: { items: @widgets["widgets"], edit: false} %>
+
+<script type="text/javascript">
+$(".search_widgets").keyup(function() {
+    $.ajax({
+       url: '/widgets/search',
+       data: {search: $(this).serialize()}
+    });
+});
+</script>

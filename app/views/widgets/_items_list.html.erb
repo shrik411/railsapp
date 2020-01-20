@@ -5,6 +5,12 @@
             <td><%= item['name'] %></td>
             <td><%= item['description'] %></td>
             <td><%= link_to(item['user']['name'], user_path(item['user']['id'])) %></td>
+            <% if edit == true %>
+                <td>
+                    <%= link_to("Edit", edit_widget_path(item['id']), :item => item) %>
+                    <%= link_to("Delete", widget_path(item['id']), method: :delete) %>
+                </td>
+            <% end %>
         </tr>
     <% end %>
 <% else %>

@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  root 'widgets#index', as:'home'
+  root 'widgets#listall', as:'home'
   get 'about' => 'pages#about'
   get "users/show" => 'users#new_release1', :as => :new_release1
   get "users/new_release" => 'users#new_release', :as => :new_release

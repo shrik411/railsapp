@@ -26,7 +26,7 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><%= link_to "Home", home_path %></li>
-            <li><a href="#about">Widget</a></li>
+            <% if session[:token] %><li><%= link_to "Widgets", widgets_path %></li><% end %>
             <li><a href="#contact">Users</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">

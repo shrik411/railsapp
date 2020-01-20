@@ -62,11 +62,14 @@ class UsersController < ApplicationController
           'Authorization' => "Bearer #{token}" 
         }
         @widget = get_widgets(id)
-
+        puts @widget
+        
         response = ApiCall.new("https://showoff-rails-react-production.herokuapp.com", "get", "/api/v1/users/#{id}", {},  {}, headers).execute()
         @response = JSON.parse(response.body)
         @message = @response["message"]
         @user =  @response["data"]
+
+        puts @user
       else
         redirect_to home_path
       end

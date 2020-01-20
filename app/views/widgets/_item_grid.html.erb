@@ -6,11 +6,14 @@
     <th scope="col">Name</th>
     <th scope="col">Description</th>
     <th scope="col">User</th>
+    <% if edit == true %>
+      <th scope="col">Action</th>
+    <% end %>
   </tr>
 </thead>
 <tbody id="items_grid" class="widget_tbody_content">
   <% if !items.nil? %>
-      <%= render partial: 'widgets/items_list', locals: {items: items}  %>
+      <%= render partial: 'widgets/items_list', locals: {items: items, edit: edit}  %>
   <% else %>
     <tr>
       <td colspan="4">No Data Found</td>

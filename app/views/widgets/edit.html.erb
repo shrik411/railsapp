@@ -1,9 +1,10 @@
 <% provide(:title, "Sign in") %>
-<h1>New Widget</h1>
-
+<h1>Edit Widget</h1>
+<%= :item %>
 <div class="row">
   <div class="span6 offset3">
-    <%= form_for :post, url: widgets_path do |f| %>
+    <%= form_for :put, method: :put, url: widgets_path(:id => @id) do |f| %>
+      <%= f.text_field(:id, {:value => @id, :class => 'form-control hidden'}) %>
 
       <%= f.label :name %>
       <%= f.text_field(:name, {:class => 'form-control'}) %>
@@ -11,8 +12,8 @@
       <%= f.label :description %>
       <%= f.text_field(:description, {:class => 'form-control'}) %>
 
-      <%= f.label :kind %>
-      <%= f.text_field(:kind, {:class => 'form-control'}) %>
+      <%= f.label :type %>
+      <%= f.text_field(:type, {:class => 'form-control'}) %>
       <br />
       <%= f.submit "Sign in", class: "btn btn-large btn-primary" %>
     <% end %>
